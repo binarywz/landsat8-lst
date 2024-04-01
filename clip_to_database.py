@@ -27,14 +27,14 @@ if __name__ == '__main__':
     fileDate: str = fileDate[:4] + "-" + fileDate[4:6] + "-" + fileDate[6:8]
 
     basePath: str = r"D:/binarywz"
-    dataPath: str = r"/data/rsensing/lst/" + fileDate + "/0533/"
+    dataPath: str = r"/data/rsensing/ndvi/" + fileDate + "/0533/"
     dirPath = basePath + dataPath
     print("dirPath: ", dirPath)
     if not os.path.exists(dirPath):
         os.makedirs(dirPath)
 
     # 裁剪影像
-    fileNameList = rgi.clipRSensingImage(filePath, dirPath, 512)
+    fileNameList = rgi.clipRSensingImage(filePath, dirPath, 512, metricType="FLOAT")
 
     address = {
         "host": "192.168.46.10",
@@ -70,4 +70,4 @@ if __name__ == '__main__':
         image_mapping["max_lat"] = rt[0]
         image_mapping["min_lat"] = rb[0]
         print("Image mapping: {}".format(image_mapping))
-        es.index(index = "rs_lst_" + cityCode, body = image_mapping)
+        es.index(index = "rs_ndvi_" + cityCode, body = image_mapping)

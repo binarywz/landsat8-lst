@@ -5,7 +5,7 @@ import logging
 import numpy as np
 
 
-def clipRSensingImage(imagePath: str, outPath: str, size: int):
+def clipRSensingImage(imagePath: str, outPath: str, size: int, metricType="INT"):
     """
     拼接遥感影像
     :param imagePath: 原始遥感影像
@@ -43,8 +43,10 @@ def clipRSensingImage(imagePath: str, outPath: str, size: int):
             outFile = outPath + "{}.tif".format(tifName)
 
             # 创建切出来的要存的文件
-            out_ds = gtif_driver.Create(outFile, b_xsize, b_ysize, bands=bands, eType=gdal.GDT_Int32)
-            # print("create new tif file succeed")
+            if metricType == "INT":
+                out_ds = gtif_driver.Create(outFile, b_xsize, b_ysize, bands=bands, eType=gdal.GDT_Int32)
+            else:
+                out_ds = gtif_driver.Create(outFile, b_xsize, b_ysize, bands=bands, eType=gdal.GDT_Float32)
 
             # 获取原图的原点坐标信息
             ori_transform = in_ds.GetGeoTransform()
@@ -72,7 +74,10 @@ def clipRSensingImage(imagePath: str, outPath: str, size: int):
             # 写入目标文件
             array_band = []
             for k in range(1, bands + 1):
-                array_band = in_ds.GetRasterBand(k).ReadAsArray(offset_x, offset_y, b_xsize, b_ysize).astype(np.int32)
+                if metricType == "INT":
+                    array_band = in_ds.GetRasterBand(k).ReadAsArray(offset_x, offset_y, b_xsize, b_ysize).astype(np.int32)
+                else:
+                    array_band = in_ds.GetRasterBand(k).ReadAsArray(offset_x, offset_y, b_xsize, b_ysize).astype(np.float32)
                 out_ds.GetRasterBand(k).WriteArray(array_band)  # 将每个波段写入新的文件中
 
             # 将缓存写入磁盘
@@ -83,6 +88,7 @@ def clipRSensingImage(imagePath: str, outPath: str, size: int):
                 os.remove(outFile)
             else:
                 fileNameList.append("{}.tif".format(tifName))
+    print("Length of fileNameList: {}".format(len(fileNameList)))
     return fileNameList
 
 def mosaicRSensingImage(imageUrlList: list, outPath: str) -> str:
