@@ -27,7 +27,7 @@ if __name__ == '__main__':
     fileDate: str = fileDate[:4] + "-" + fileDate[4:6] + "-" + fileDate[6:8]
 
     basePath: str = r"D:/binarywz"
-    dataPath: str = r"/data/rsensing/lst/" + fileDate + "/0533/"
+    dataPath: str = r"/data/rsensing/ndvi/" + fileDate + "/0471/"
     dirPath = basePath + dataPath
     print("dirPath: ", dirPath)
     if not os.path.exists(dirPath):
@@ -53,7 +53,7 @@ if __name__ == '__main__':
         "phase_time": "2024-01-19"
     }
 
-    cityCode: str = "0533"
+    cityCode: str = "0471"
     for fileName in fileNameList:
         path = os.path.join(dirPath, fileName)
         print('File {} loaded'.format(path))
@@ -70,4 +70,4 @@ if __name__ == '__main__':
         image_mapping["max_lat"] = rt[0]
         image_mapping["min_lat"] = rb[0]
         print("Image mapping: {}".format(image_mapping))
-        es.index(index = "rs_lst_" + cityCode, body = image_mapping)
+        es.index(index = "rs_ndvi_" + cityCode, body = image_mapping)

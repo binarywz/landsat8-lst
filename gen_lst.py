@@ -7,6 +7,8 @@ Landsat8反演地表温度
 1.解压文件
 2.选择metadata
 3.反演指标
+
+Landsat8产品: LC08_L1TP_121035_20240309_20240316_02_T1.tar
 """
 if __name__ == '__main__':
 
